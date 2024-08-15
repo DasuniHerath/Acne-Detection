@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acne Detection</title>
+  </head>
+  <body>
+    <h1>Acne Detection</h1>
+    <form
+      id="uploadForm"
+      action="/"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="file">Select image:</label>
+      <input type="file" id="file" name="file" required />
+      <br />
+      <button type="submit">Upload</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      document.getElementById("uploadForm").onsubmit = function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        fetch("/", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `
+                    <h2>Results:</h2>
+                    <p><strong>Acne Severity:</strong> ${data.acne_severity}</p>
+                `;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `
+                    <h2>Error</h2>
+                    <p>There was an issue processing your request. Please try again.</p>
+                `;
+          });
+      };
+    </script>
+  </body>
+</html>
